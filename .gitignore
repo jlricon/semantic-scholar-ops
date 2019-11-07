@@ -1,0 +1,6 @@
+data/s2-corpus-000.gz
+terraform/terraform
+terraform/terraform.tfstate
+terraform/.terraform
+terraform/terraform.tfvars
+terraform/vars.tfvars
