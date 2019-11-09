@@ -11,7 +11,7 @@ module.exports.get_papers = async event => {
   return pool.connect().then(client => {
     return client
       .query(
-        `SELECT id,title,abstract FROM papers 
+        `SELECT id,title,paper_abstract FROM papers 
 
         WHERE id IN (SELECT unnest(cite_to) FROM citation WHERE cite_from=$1)
         AND is_meta = true`,
