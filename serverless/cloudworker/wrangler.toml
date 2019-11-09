@@ -1,0 +1,7 @@
+name = "worker"
+type = "javascript"
+account_id = "cee63b550cf33e4de8442c27f8f6432c"
+workers_dev = true
+[env.production]
+route = "*ricon.dev/api/*"
+zone_id = "b3942b4841cef51e172b367e07934ba7"

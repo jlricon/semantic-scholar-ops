@@ -57,11 +57,11 @@ resource "aws_route_table" "r" {
 }
 resource "aws_db_instance" "paper_db" {
 
-  allocated_storage    = 100
+  allocated_storage    = 250
   storage_type         = "gp2"
   engine               = "postgres"
   engine_version       = "11.5"
-  instance_class       = "db.t2.small"
+  instance_class       = "db.t2.micro"
   name                 = "paper_db"
   identifier = "papers"
   username             = "rooter"
