@@ -61,7 +61,7 @@ resource "aws_db_instance" "paper_db" {
   storage_type         = "gp2"
   engine               = "postgres"
   engine_version       = "11.5"
-  instance_class       = "db.t2.micro"
+  instance_class       = "db.t3.small"
   name                 = "paper_db"
   identifier = "papers"
   username             = "rooter"
@@ -74,6 +74,43 @@ resource "aws_db_instance" "paper_db" {
   auto_minor_version_upgrade = false
 
 }
+resource "aws_security_group" "database" {
+  name        = "default"
+  vpc_id      = aws_vpc.main.id
+  description="db security group"
+
+  ingress {
+    # TLS (change to whatever ports you need)
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    # Please restrict your ingress to only necessary IPs and ports.
+    # Opening to 0.0.0.0/0 can lead to security vulnerabilities.
+    cidr_blocks = ["0.0.0.0/0"]# add a CIDR block here
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+     ipv6_cidr_blocks = ["::/0"]
+  }
+}
+
+//resource "aws_rds_cluster" "paper_db2" {
+//  cluster_identifier      = "papers2"
+//  engine                  = "aurora-postgresql"
+//  engine_mode = "serverless"
+//  database_name           = "paper_db"
+//  master_username         = "rooter"
+//  master_password         = "KHn5Exzp4aBfcs"
+//  apply_immediately = true
+//skip_final_snapshot = true
+//  vpc_security_group_ids = [aws_security_group.database.id]
+//}
+
 output "db_endpoint" {
     value = aws_db_instance.paper_db.endpoint
 }
