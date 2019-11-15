@@ -1,0 +1,10 @@
+{
+  "env": {
+    "PGHOST": "@PGHOST",
+    "PGPORT": "@PGPORT",
+    "PGDATABASE": "@PGDATABASE",
+    "PGPASSWORD": "@PGPASSWORD",
+    "PGUSER": "@PGUSER",
+    "DB_REST_API_KEY": "@DB_REST_API_KEY"
+  }
+}
