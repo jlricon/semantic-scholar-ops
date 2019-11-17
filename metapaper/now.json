@@ -1,10 +1,10 @@
 {
   "env": {
-    "PGHOST": "@PGHOST",
-    "PGPORT": "@PGPORT",
-    "PGDATABASE": "@PGDATABASE",
-    "PGPASSWORD": "@PGPASSWORD",
-    "PGUSER": "@PGUSER",
-    "DB_REST_API_KEY": "@DB_REST_API_KEY"
+    "PGHOST": "@pghost",
+    "PGPORT": "5432",
+    "PGDATABASE": "@pgdatabase",
+    "PGPASSWORD": "@pgpassword",
+    "PGUSER": "@pguser",
+    "DB_REST_API_KEY": "@dbapikey"
   }
 }
