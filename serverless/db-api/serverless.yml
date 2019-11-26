@@ -20,18 +20,20 @@ provider:
   name: aws
   runtime: nodejs10.x
   region: eu-west-1
+  timeout: 40
   apiKeys:
     - value: ${env:DB_REST_API_KEY}
-plugins:
-  - serverless-dotenv-plugin
-usagePlan:
+  usagePlan:
   quota:
-    limit: 100
+    limit: 1000
     offset: 2
     period: DAY
   throttle:
     burstLimit: 10
     rateLimit: 5
+plugins:
+  - serverless-dotenv-plugin
+
 functions:
   get_papers:
     handler: handler.get_papers
