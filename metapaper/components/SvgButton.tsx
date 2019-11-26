@@ -1,17 +1,13 @@
-function SvgButton({ paperIdSetter, modeSetter, id, resultNSetter }) {
-  function setContent(event) {
-    event.preventDefault();
-    resultNSetter("Searching meta-analysis...");
-    modeSetter("meta");
-    paperIdSetter(id);
-  }
+import { searchMetas } from "../lib/redux";
+import { connect } from "react-redux";
+function SvgButton({ id, dispatch }) {
   return (
     <button
       className="bg-blue-500 hover:bg-blue-700 text-white 
     font-bold  rounded-full outline-none border-transparent focus:outline-none
     items-center w-10 h-10
     "
-      onClick={event => setContent(event)}
+      onClick={event => dispatch(searchMetas(id))}
     >
       <svg
         viewBox="0 0 20 20"
@@ -27,4 +23,4 @@ function SvgButton({ paperIdSetter, modeSetter, id, resultNSetter }) {
   );
 }
 
-export default SvgButton;
+export default connect(null, null)(SvgButton);

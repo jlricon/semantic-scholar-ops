@@ -1,9 +1,11 @@
 import SvgButton from "../components/SvgButton";
-function PaperDiv({ paper, paperIdSetter, modeSetter, resultNSetter }) {
+import MetaBadge from "../components/MetaBadge";
+function PaperDiv({ paper }) {
   return (
     <div className="max-w-6xl rounded overflow-hidden shadow-lg bg-white  md:mx-4 my-1">
       <div className="px-1 md:px-6 py-4">
         <div className="flex flex-row justify-between">
+          <MetaBadge isMeta={paper.is_meta}></MetaBadge>
           <a
             href={`https://api.semanticscholar.org/${paper.id}`}
             className="font-bold md:text-lg mb-2 hover:text-teal-500 text-justify pr-3"
@@ -11,12 +13,7 @@ function PaperDiv({ paper, paperIdSetter, modeSetter, resultNSetter }) {
             {paper.title} ({paper.pubyear})
           </a>
 
-          <SvgButton
-            paperIdSetter={paperIdSetter}
-            modeSetter={modeSetter}
-            id={paper.id}
-            resultNSetter={resultNSetter}
-          ></SvgButton>
+          <SvgButton id={paper.id}></SvgButton>
         </div>
         <p className="text-gray-700 font-light">{paper.venue}</p>
         <p className="text-gray-700 font-light">

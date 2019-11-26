@@ -58,7 +58,8 @@ function getPaperForText(text) {
           paper_abstract,
           pubyear,
           doi,
-          venue
+          venue,
+          is_meta
         from
           papers
         where
