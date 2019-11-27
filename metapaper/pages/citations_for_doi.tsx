@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import "../styles/main.css";
 import GwernPaperDiv from "../components/GwernPaperDiv";
 import { NextPageContext } from "next";
+import { QueryKind } from "../lib/query_kinds";
 const fetch = require("@zeit/fetch-retry")(require("isomorphic-unfetch"));
 const Content = ({ papers }) => {
   const router = useRouter();
@@ -48,7 +49,7 @@ Content.getInitialProps = async function(context: NextPageContext) {
   console.log(`Citations for doi ${doi}`);
   var params = new URLSearchParams({
     doi: doi as string,
-    queryKind: "citations_for_doi"
+    queryKind: QueryKind.citations_for_doi
   });
   url.search = params.toString();
 

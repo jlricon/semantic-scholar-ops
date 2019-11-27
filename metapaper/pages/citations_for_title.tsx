@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import "../styles/main.css";
 import GwernPaperDiv from "../components/GwernPaperDiv";
 import { NextPageContext } from "next";
+import { QueryKind } from "../lib/query_kinds";
 const fetch = require("@zeit/fetch-retry")(require("isomorphic-unfetch"));
 const matchtext = nmatches =>
   nmatches === 1000 ? "1000 matches or more" : `${nmatches} matches`;
@@ -51,7 +52,7 @@ Content.getInitialProps = async function(context: NextPageContext) {
   console.log(`Citations for title ${title}`);
   var params = new URLSearchParams({
     title: title as string,
-    queryKind: "citations_for_title"
+    queryKind: QueryKind.citations_for_title
   });
   url.search = params.toString();
 

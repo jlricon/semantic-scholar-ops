@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import "../styles/main.css";
 import PaperDiv from "../components/PaperDiv";
 import ReactGA from "react-ga";
-import { searchPapers, States } from "../lib/redux";
+import { searchPapers, States, State } from "../lib/redux";
 import { isDev } from "../lib/lib";
 import { connect } from "react-redux";
 function initGa() {
@@ -11,10 +11,10 @@ function initGa() {
   ReactGA.pageview(window.location.pathname + window.location.search);
 }
 
-function stateToProps(state = { papers: [], state: States.IDLE }) {
+function stateToProps(state: State = { papers: [], status: States.IDLE }) {
   const { papers } = state;
   const searchBarMsg =
-    state.state === States.IDLE ? papers.length : "Searching";
+    state.status === States.IDLE ? papers.length : "Searching";
 
   return { papers, searchBarMsg };
 }

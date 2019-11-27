@@ -10,14 +10,15 @@ export enum States {
   IDLE,
   SEARCHING
 }
-const defaultState = {
+export interface State {
+  papers: any[];
+  status: States;
+}
+const defaultState: State = {
   papers: [],
-  state: States.IDLE
+  status: States.IDLE
 };
-function setState(state = defaultState, action) {
-  if (state.state === States.SEARCHING) {
-    return state;
-  }
+function setState(state: State = defaultState, action) {
   switch (action.type) {
     case Actions.RECEIVE_PAPERS:
       console.log("Papers received");
