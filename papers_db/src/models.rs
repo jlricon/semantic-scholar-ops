@@ -9,7 +9,7 @@ pub struct Paper {
     pub venue: Option<String>,
     pub doi: Option<String>,
     pub pubyear: Option<i16>,
-    pub title_tokens:Option<TsVector>
+    pub title_tokens: Option<TsVector>,
 }
 use super::schema::papers;
 #[derive(Insertable)]
