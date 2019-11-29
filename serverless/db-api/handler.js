@@ -42,10 +42,18 @@ module.exports.get_papers = async event => {
   }
 };
 function getPaperForText(text) {
-  // Prepare text
-  const joined_text = text.replace(",", " ");
-  // .split(",")
-  // .join(" &");
+  // query MyQuery {
+  //   search_paper(args: {search: "physics", lim: 20}, order_by: {pubyear: desc_nulls_last}) {
+  //     venue
+  //     pubyear
+  //     paper_abstract
+  //     doi
+  //     id
+  //     is_meta
+  //     title
+  //   }
+  // }
+
   return pool.connect().then(client => {
     return client
       .query(
@@ -83,6 +91,16 @@ function getPaperForText(text) {
       });
   });
 }
+// query MyQuery {
+//   papers(limit: 1, where: {doi: {_eq: ""}}) {
+//     id
+//     title
+//     paper_abstract
+//     pubyear
+//     doi
+//     venue
+//   }
+// }
 
 function getPaperForDoi(doi) {
   return pool.connect().then(client => {
@@ -152,6 +170,16 @@ function getCitationsForDoi(doi) {
       });
   });
 }
+// query MyQuery {
+//   search_paper_citations(args: {lim: 100, search: "physics"}, order_by: {pubyear: desc_nulls_last}) {
+//     title
+//     paper_abstract
+//     pubyear
+//     venue
+//     is_meta
+//     doi
+//   }
+// }
 function getCitationsForTitle(title) {
   return pool.connect().then(client => {
     return Promise.all([
@@ -199,6 +227,17 @@ function getCitationsForTitle(title) {
       });
   });
 }
+// query MyQuery {
+//   search_metas_for_id(args: {search: "physics"}) {
+//     id
+//     paper_abstract
+//     pubyear
+//     doi
+//     venue
+//     title
+//   }
+// }
+
 function getMetasForPaperId(paperId) {
   return pool.connect().then(client => {
     return client
