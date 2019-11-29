@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import "../styles/main.css";
 import GwernPaperDiv from "../components/GwernPaperDiv";
 import { NextPageContext } from "next";
-import { QueryKind } from "../lib/query_kinds";
+
 const fetch = require("@zeit/fetch-retry")(require("isomorphic-unfetch"));
 const matchtext = nmatches =>
   nmatches === 1000 ? "1000 matches or more" : `${nmatches} matches`;
@@ -44,30 +44,45 @@ const Content = ({ papers, nmatches }) => {
 
 export default Content;
 Content.getInitialProps = async function(context: NextPageContext) {
-  const ENDPOINT =
-    "https://ftbk772hkb.execute-api.eu-west-1.amazonaws.com/dev/webhook";
-  var url = new URL(ENDPOINT);
+  const ENDPOINT = "https://hasura-ss.herokuapp.com/v1/graphql";
 
   const { title } = context.query;
   console.log(`Citations for title ${title}`);
-  var params = new URLSearchParams({
-    title: title as string,
-    queryKind: QueryKind.citations_for_title
-  });
-  url.search = params.toString();
-
-  return await fetch(url.toString(), {
-    headers: { "X-API-KEY": process.env.DB_REST_API_KEY }
+  const graphqlRequest = {
+    query: `query MyQuery($lim: Int, $text: String, $lim2: Int) {
+      search_paper_citations(args: {lim: $lim, search: $text}, order_by: {pubyear: desc_nulls_last}) {
+        title
+        paper_abstract
+        pubyear
+        venue
+        is_meta
+        doi
+      }
+      search_paper_aggregate(args: {lim: $lim2, search: $text}) {
+        aggregate {
+          count
+        }
+      }
+    }`,
+    variables: { lim: 100, text: title, lim2: 1000 }
+  };
+  return await fetch(ENDPOINT, {
+    headers: { "x-hasura-admin-secret": process.env.DB_REST_API_KEY },
+    body: JSON.stringify(graphqlRequest),
+    method: "POST"
   })
     .then(response => response.json())
     // So that we only ever call the same paper once
     .then(jsonified => {
-      if (!(jsonified === { message: "Internal server error" })) {
-        context.res.setHeader("Cache-Control", "max-age=0, s-maxage=86400");
-        return { papers: jsonified.rows, nmatches: jsonified.nmatches };
-      }
-      console.log("Internal server error");
-      return { papers: [], nmatches: [] };
+      context.res.setHeader("Cache-Control", "max-age=0, s-maxage=86400");
+
+      return {
+        papers: jsonified.data.search_paper_citations,
+        nmatches: jsonified.data.search_paper_aggregate.aggregate.count
+      };
     })
-    .catch([]);
+    .catch(ex => {
+      console.log(`An exception occurred ${ex}`);
+      return { papers: [], nmatches: 0 };
+    });
 };
