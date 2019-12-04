@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import "../styles/main.css";
 import GwernPaperDiv from "../components/GwernPaperDiv";
 import { NextPageContext } from "next";
-
+import * as Sentry from '@sentry/node'
 const fetch = require("@zeit/fetch-retry")(require("isomorphic-unfetch"));
 const matchtext = nmatches =>
   nmatches === 1000 ? "1000 matches or more" : `${nmatches} matches`;
@@ -45,9 +45,10 @@ const Content = ({ papers, nmatches }) => {
 export default Content;
 Content.getInitialProps = async function(context: NextPageContext) {
   const ENDPOINT = "https://hasura-ss.herokuapp.com/v1/graphql";
-
+  
   const { title } = context.query;
-  console.log(`Citations for title ${title}`);
+
+  Sentry.captureMessage(`Citations for title ${title}`);
   const graphqlRequest = {
     query: `query MyQuery($lim: Int, $text: String, $lim2: Int) {
       search_paper_citations(args: {lim: $lim, search: $text}, order_by: {pubyear: desc_nulls_last}) {

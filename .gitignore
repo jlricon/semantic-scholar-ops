@@ -7,3 +7,4 @@ terraform/vars.tfvars
 terraform/terraform.tfstate.backup
 serverless/node_modules
 
+metapaper/.idea/

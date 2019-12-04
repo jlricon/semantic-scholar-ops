@@ -3,6 +3,7 @@ import "../styles/main.css";
 import GwernPaperDiv from "../components/GwernPaperDiv";
 import { NextPageContext } from "next";
 import { QueryKind } from "../lib/query_kinds";
+import * as Sentry from '@sentry/node'
 const fetch = require("@zeit/fetch-retry")(require("isomorphic-unfetch"));
 const Content = ({ papers }) => {
   const router = useRouter();
@@ -46,7 +47,7 @@ Content.getInitialProps = async function(context: NextPageContext) {
   var url = new URL(ENDPOINT);
 
   const { doi } = context.query;
-  console.log(`Citations for doi ${doi}`);
+  Sentry.captureMessage(`Citations for doi ${doi}`);
   var params = new URLSearchParams({
     doi: doi as string,
     queryKind: QueryKind.citations_for_doi

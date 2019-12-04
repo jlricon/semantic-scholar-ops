@@ -1,11 +1,17 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { QueryKind } from "../../lib/query_kinds";
+import * as Sentry from "@sentry/node";
 const ENDPOINT =
   "https://ftbk772hkb.execute-api.eu-west-1.amazonaws.com/dev/webhook";
 const fetch = require("@zeit/fetch-retry")(require("isomorphic-unfetch"));
+Sentry.init({
+  // Replace with your project's Sentry DSN
+  dsn: 'https://4a090e4850194046a0c4e7ead31c09a0@sentry.io/1839641',
+})
 export default function handle(req: NextApiRequest, res: NextApiResponse) {
   const queryKind: string = req.query.queryKind as string;
   const queryKindEnum: QueryKind = QueryKind[queryKind];
+  Sentry.captureMessage(`Got queryKind ${queryKind} with query ${JSON.stringify(req.query)}`);
   if (queryKind === undefined) {
     res.status(500).send("You must provide a query kind");
   } else if (!(queryKind in QueryKind)) {

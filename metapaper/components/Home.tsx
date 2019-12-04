@@ -13,6 +13,7 @@ function initGa() {
 
 function stateToProps(state: State = { papers: [], status: States.IDLE }) {
   const { papers } = state;
+
   const searchBarMsg =
     state.status === States.IDLE ? papers.length : "Searching";
 
