@@ -6,7 +6,7 @@ const ENDPOINT =
 const fetch = require("@zeit/fetch-retry")(require("isomorphic-unfetch"));
 Sentry.init({
   // Replace with your project's Sentry DSN
-  dsn: 'https://4a090e4850194046a0c4e7ead31c09a0@sentry.io/1839641',
+  dsn: `https://4a090e4850194046a0c4e7ead31c09a0@sentry.io/1839641`,
 })
 export default function handle(req: NextApiRequest, res: NextApiResponse) {
   const queryKind: string = req.query.queryKind as string;
