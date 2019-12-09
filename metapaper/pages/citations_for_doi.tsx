@@ -2,12 +2,13 @@ import { useRouter } from "next/router";
 import "../styles/main.css";
 import GwernPaperDiv from "../components/GwernPaperDiv";
 import { NextPageContext } from "next";
-import { QueryKind } from "../lib/query_kinds";
 import * as Sentry from '@sentry/node'
 const fetch = require("@zeit/fetch-retry")(require("isomorphic-unfetch"));
-const Content = ({ papers }) => {
+const matchtext = nmatches =>
+  nmatches === 1000 ? "1000 matches or more" : `${nmatches} matches`;
+const Content = ({ papers, nmatches }) => {
   const router = useRouter();
-  const doi = router.query.doi;
+  const title = router.query.title;
   return (
     <div
       className="flex flex-col bg-gray-300 h-full"
@@ -15,7 +16,8 @@ const Content = ({ papers }) => {
     >
       <div className="mx-auto">
         <h1 className="font-bold  text-2xl text-center text-gray-800 ">
-          Papers that cite {doi}
+          Papers that cite {title} ({matchtext(nmatches)} for that title,
+          showing only one)
         </h1>
       </div>
 
@@ -42,30 +44,46 @@ const Content = ({ papers }) => {
 
 export default Content;
 Content.getInitialProps = async function(context: NextPageContext) {
-  const ENDPOINT =
-    "https://ftbk772hkb.execute-api.eu-west-1.amazonaws.com/dev/webhook";
-  var url = new URL(ENDPOINT);
+  const ENDPOINT = "https://hasura-ss.herokuapp.com/v1/graphql";
+  
+  const { title } = context.query;
 
-  const { doi } = context.query;
-  Sentry.captureMessage(`Citations for doi ${doi}`);
-  var params = new URLSearchParams({
-    doi: doi as string,
-    queryKind: QueryKind.citations_for_doi
-  });
-  url.search = params.toString();
-
-  return await fetch(url.toString(), {
-    headers: { "X-API-KEY": process.env.DB_REST_API_KEY }
+  Sentry.captureMessage(`Citations for title ${title}`);
+  const graphqlRequest = {
+    query: `query MyQuery($lim: Int, $text: String, $lim2: Int) {
+      search_paper_citations(args: {lim: $lim, search: $text}, order_by: {pubyear: desc_nulls_last}) {
+        title
+        paper_abstract
+        pubyear
+        venue
+        is_meta
+        doi
+      }
+      search_paper_aggregate(args: {lim: $lim2, search: $text}) {
+        aggregate {
+          count
+        }
+      }
+    }`,
+    variables: { lim: 100, text: title, lim2: 1000 }
+  };
+  return await fetch(ENDPOINT, {
+    headers: { "x-hasura-admin-secret": process.env.DB_REST_API_KEY },
+    body: JSON.stringify(graphqlRequest),
+    method: "POST"
   })
     .then(response => response.json())
     // So that we only ever call the same paper once
     .then(jsonified => {
-      if (!(jsonified === { message: "Internal server error" })) {
-        context.res.setHeader("Cache-Control", "max-age=0, s-maxage=86400");
-        return { papers: jsonified };
-      }
-      console.log("Internal server error");
-      return { papers: [] };
+      context.res.setHeader("Cache-Control", "max-age=0, s-maxage=86400");
+
+      return {
+        papers: jsonified.data.search_paper_citations,
+        nmatches: jsonified.data.search_paper_aggregate.aggregate.count
+      };
     })
-    .catch([]);
+    .catch(ex => {
+      console.log(`An exception occurred ${ex}`);
+      return { papers: [], nmatches: 0 };
+    });
 };

@@ -1,9 +1,11 @@
+import { QueryKind } from "./query_kinds";
+
 // lib
 export function getPapersForText(text, addr) {
   var url = new URL(`${addr}/api/get_paper`);
   var params = new URLSearchParams({
     text: text,
-    queryKind: "paper_for_text"
+    queryKind: QueryKind.paper_for_text
   });
   url.search = params.toString();
   return fetch(url.toString())
@@ -22,7 +24,7 @@ export function getPapersForText(text, addr) {
 }
 export async function getMetaForId(paperId, addr) {
   let data = await fetch(
-    `${addr}/api/get_paper?queryKind=meta_for_id&id=${paperId}`
+    `${addr}/api/get_paper?queryKind=${QueryKind.meta_for_id}&id=${paperId}`
   ).then(a => a.json());
   if (data.message === "Internal server error") {
     console.log("Error!");
