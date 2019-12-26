@@ -6,6 +6,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1.0.0
+      - name: Move to dir
+        run: cd metapaper
       - name: Install
         run: yarn
       - name: Percy Test
