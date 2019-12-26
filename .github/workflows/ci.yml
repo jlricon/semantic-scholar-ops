@@ -20,7 +20,7 @@ jobs:
         run: yarn
         working-directory: ./metapaper
       - name: First start
-        run: now dev --debug
+        run: now dev --debug &
         working-directory: ./metapaper
 
       - name: Kill serve
