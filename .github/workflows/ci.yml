@@ -16,7 +16,7 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-        working-directory: ./metapaper
+
       - name: Install
         run: yarn
         working-directory: ./metapaper
