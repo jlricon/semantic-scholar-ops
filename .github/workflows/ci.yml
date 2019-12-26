@@ -1,5 +1,5 @@
 name: CI
-on: [push, pull_request]
+on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -9,7 +9,6 @@ jobs:
       - name: Get yarn cache
         id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
-        working-directory: ./metapaper
       - uses: actions/cache@v1
         with:
           path: ${{ steps.yarn-cache.outputs.dir }}
