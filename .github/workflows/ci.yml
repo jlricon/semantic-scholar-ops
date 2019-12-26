@@ -9,11 +9,14 @@ jobs:
       - name: Install
         run: yarn
         working-directory: ./metapaper
+      - name: Serve
+        run: now dev & wait-on http://localhost:3000
+
       - name: Percy Test
         uses: percy/exec-action@v0.1.2
 
         with:
-          command: "node tests/snapshots.js"
+          command: "cypress-run"
           working-directory: ./metapaper
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}

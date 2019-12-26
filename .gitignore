@@ -8,3 +8,4 @@ terraform/terraform.tfstate.backup
 serverless/node_modules
 
 metapaper/.idea/
+metapaper/cypress/videos/
