@@ -12,7 +12,6 @@ jobs:
       - name: Percy Test
         uses: percy/exec-action@v0.1.2
         with:
-          command: "yarn exec node tests/snapshots.js"
+          command: "yarn exec node metapaper/tests/snapshots.js"
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
-        working-directory: ./metapaper
