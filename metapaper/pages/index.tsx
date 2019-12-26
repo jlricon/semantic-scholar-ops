@@ -31,7 +31,7 @@ const Home = ({ settedSearchString }) => {
 
   function submitForm(event) {
     event.preventDefault();
-    // dispatch(searchPapers(buttonContent));
+    dispatch({ type: Actions.REQUEST_STARTED });
     Router.push({
       pathname: "/",
       query: { s: buttonContent }
@@ -100,27 +100,32 @@ const Home = ({ settedSearchString }) => {
   );
 };
 
-Home.getInitialProps = async ({ reduxStore, query, req }) => {
+Home.getInitialProps = async ({ reduxStore, query, req, res }) => {
   // Tick the time once, so we'll have a
   // valid time before first render
   const { s } = query;
+  const { dispatch, getState } = reduxStore;
+
   if (s !== undefined && s !== "") {
-    const { dispatch, getState } = reduxStore;
     // Call function directly if in server or make URL call
-    if (process.env.DB_REST_API_KEY !== undefined) {
+
+    if (process.browser !== true) {
       const papers = (await sendTextQuery(s)).data.search_paper;
       dispatch({
-        type: Actions.INIT,
-        papers: papers,
-        host: origin(req)
+        type: Actions.RECEIVE_PAPERS,
+        papers: papers
       });
     } else {
-      const papers = await getPapersForText(s, reduxStore.getState().host);
+      const papers = await getPapersForText(s, getState().host);
       dispatch({
         type: Actions.RECEIVE_PAPERS,
         papers: papers
       });
     }
+  }
+  if (process.browser !== true) {
+    dispatch({ type: Actions.SET_HOST, host: origin(req) });
+    res.setHeader("Cache-Control", "max-age=0, s-maxage=864000");
   }
 
   return { settedSearchString: s };

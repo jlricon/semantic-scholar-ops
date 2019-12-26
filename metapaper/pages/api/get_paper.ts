@@ -92,6 +92,7 @@ export async function sendTextQueryAndCache(
   // So that we only ever call the same paper once
   if (!(jsonified === { message: "Internal server error" })) {
     res.setHeader("Cache-Control", "max-age=0, s-maxage=864000");
+    res.setHeader("Access-Control-Allow-Origin", "*");
   }
   res.json(JSON.stringify(jsonified.data.search_paper));
 }

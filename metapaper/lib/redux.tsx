@@ -7,7 +7,7 @@ import React from "react";
 export enum Actions {
   REQUEST_STARTED,
   RECEIVE_PAPERS,
-  INIT
+  SET_HOST
 }
 export enum States {
   IDLE,
@@ -31,13 +31,11 @@ function setState(state: State = defaultState, action) {
     case Actions.REQUEST_STARTED:
       console.log("Request started");
       return { ...state, status: States.SEARCHING };
-    case Actions.INIT:
+    case Actions.SET_HOST:
       console.log("Request started");
       return {
         ...state,
-        papers: action.papers,
-        host: action.host,
-        status: States.IDLE
+        host: action.host
       };
     default:
       return state;

@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import "../styles/main.css";
 import GwernPaperDiv from "../components/GwernPaperDiv";
 import { NextPageContext } from "next";
-import * as Sentry from '@sentry/node'
+import * as Sentry from "@sentry/node";
 const fetch = require("@zeit/fetch-retry")(require("isomorphic-unfetch"));
 const matchtext = nmatches =>
   nmatches === 1000 ? "1000 matches or more" : `${nmatches} matches`;
@@ -16,8 +16,8 @@ const Content = ({ papers, nmatches }) => {
     >
       <div className="mx-auto">
         <h1 className="font-bold  text-2xl text-center text-gray-800 ">
-          Papers that cite {title} ({matchtext(nmatches)} for that title,
-          showing only one)
+          Papers that cite {title} ({matchtext(nmatches)} for that doi, showing
+          only one)
         </h1>
       </div>
 
@@ -45,10 +45,10 @@ const Content = ({ papers, nmatches }) => {
 export default Content;
 Content.getInitialProps = async function(context: NextPageContext) {
   const ENDPOINT = "https://hasura-ss.herokuapp.com/v1/graphql";
-  
-  const { title } = context.query;
 
-  Sentry.captureMessage(`Citations for title ${title}`);
+  const { doi } = context.query;
+
+  Sentry.captureMessage(`Citations for title ${doi}`);
   const graphqlRequest = {
     query: `query MyQuery($lim: Int, $text: String, $lim2: Int) {
       search_paper_citations(args: {lim: $lim, search: $text}, order_by: {pubyear: desc_nulls_last}) {
@@ -65,7 +65,7 @@ Content.getInitialProps = async function(context: NextPageContext) {
         }
       }
     }`,
-    variables: { lim: 100, text: title, lim2: 1000 }
+    variables: { lim: 100, text: doi, lim2: 1000 }
   };
   return await fetch(ENDPOINT, {
     headers: { "x-hasura-admin-secret": process.env.DB_REST_API_KEY },
