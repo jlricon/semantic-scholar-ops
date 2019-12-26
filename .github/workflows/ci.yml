@@ -19,12 +19,12 @@ jobs:
       - name: Install
         run: yarn
         working-directory: ./metapaper
-      - run:
+      - name: First start
         name: "React: Start server to install dependencies"
         run: now dev --debug
-      - run:
+      - name: Kill server
         name: "React: Kill server"
-        run: sleep 60 && pkill -f now
+        run: sleep 30 && pkill -f now
       - name: Serve
         run: now dev & yarn wait-on http://localhost:3000
         working-directory: ./metapaper
