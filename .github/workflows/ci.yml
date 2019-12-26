@@ -6,13 +6,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1.0.0
-      - name: Move to dir
-        run: cd metapaper
       - name: Install
         run: yarn
+        working-directory: ./metapaper
       - name: Percy Test
         uses: percy/exec-action@v0.1.2
         with:
           command: "yarn exec node tests/snapshots.js"
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+        working-directory: ./metapaper
