@@ -1,13 +1,16 @@
-import { searchMetas } from "../lib/redux";
-import { connect } from "react-redux";
-function SvgButton({ id, dispatch }) {
+import { searchMetas, withRedux } from "../lib/redux";
+import { useSelector, useDispatch } from "react-redux";
+
+function SvgButton({ id }) {
+  const dispatch = useDispatch();
+  const addr = useSelector(state => state.host);
   return (
     <button
       className="bg-blue-500 hover:bg-blue-700 text-white 
     font-bold  rounded-full outline-none border-transparent focus:outline-none
     items-center w-10 h-10
     "
-      onClick={event => dispatch(searchMetas(id))}
+      onClick={event => dispatch(searchMetas(id, addr))}
     >
       <svg
         viewBox="0 0 20 20"
@@ -23,4 +26,4 @@ function SvgButton({ id, dispatch }) {
   );
 }
 
-export default connect(null, null)(SvgButton);
+export default SvgButton;

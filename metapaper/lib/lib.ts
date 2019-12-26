@@ -1,4 +1,15 @@
 import { QueryKind } from "./query_kinds";
+export const origin = req => {
+  if (!req) {
+    return "";
+  }
+
+  if (req.headers["x-now-deployment-url"]) {
+    return `https://${req.headers["x-now-deployment-url"]}`;
+  }
+
+  return `http://${req.headers.host}`;
+};
 
 // lib
 export function getPapersForText(text, addr) {
@@ -34,4 +45,3 @@ export async function getMetaForId(paperId, addr) {
 }
 
 export const isDev = process.env.NODE_ENV !== "production";
-export const addr = isDev ? "http://localhost:3000" : "https://ricon.dev";

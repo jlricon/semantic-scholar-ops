@@ -58,7 +58,7 @@ function sendMetaQuery(paperId: string, res: NextApiResponse) {
     });
 }
 
-export function sendTextQuery(text: string): any {
+export async function sendTextQuery(text: string): Promise<any> {
   const graphqlRequest = {
     query: `query MyQuery($lim: Int, $text: String) {
       search_paper(args: {lim: $lim, search: $text}, order_by: {pubyear: desc_nulls_last}) {
@@ -73,20 +73,23 @@ export function sendTextQuery(text: string): any {
     }`,
     variables: { text: text, lim: 20 }
   };
-  fetch(ENDPOINT, {
+  return fetch(ENDPOINT, {
     headers: { "x-hasura-admin-secret": process.env.DB_REST_API_KEY },
     body: JSON.stringify(graphqlRequest),
     method: "POST"
   })
-    .then(async response => {
-      await response.json();
+    .then(response => {
+      const p = response.json();
+      return p;
     })
     .catch({ message: "Internal server error" });
 }
-export function sendTextQueryAndCache(text: string, res: NextApiResponse) {
-  const jsonified = sendTextQuery(text);
+export async function sendTextQueryAndCache(
+  text: string,
+  res: NextApiResponse
+) {
+  const jsonified = await sendTextQuery(text);
   // So that we only ever call the same paper once
-
   if (!(jsonified === { message: "Internal server error" })) {
     res.setHeader("Cache-Control", "max-age=0, s-maxage=864000");
   }
