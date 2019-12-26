@@ -10,8 +10,8 @@ jobs:
         run: yarn
         working-directory: ./metapaper
       - name: Serve
-        run: now dev & wait-on http://localhost:3000
-
+        run: now dev & yarn wait-on http://localhost:3000
+        working-directory: ./metapaper
       - name: Percy Test
         uses: percy/exec-action@v0.1.2
 
