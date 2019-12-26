@@ -19,7 +19,13 @@ jobs:
       - name: Install
         run: yarn
         working-directory: ./metapaper
-
+      - run:
+        name: "React: Start server to install dependencies"
+        command: now dev --debug
+        background: true
+      - run:
+        name: "React: Kill server"
+        command: sleep 60 && pkill -f now
       - name: Serve
         run: now dev & yarn wait-on http://localhost:3000
         working-directory: ./metapaper
@@ -27,7 +33,7 @@ jobs:
         uses: percy/exec-action@v0.1.2
 
         with:
-          command: "cypress-run"
+          command: "cypress run"
           working-directory: ./metapaper
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
