@@ -1,0 +1,21 @@
+[package]
+name = "papers_db"
+version = "0.1.0"
+authors = ["Jose Luis Ricon <jose@ricon.xyz>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+diesel = {version="*", features=["postgres"]}
+dotenv = "*"
+flate2 = {version="*"}
+serde_json = "*"
+serde = {version="*",features=['derive']}
+rusoto_s3 = "*"
+# futures = "0.1.29"
+sentry = "*"
+regex = "*"
+lazy_static = "*"
+diesel_full_text_search = "*"
+itertools = "*"

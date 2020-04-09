@@ -1,0 +1,51 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: db-api
+# app and org for use with dashboard.serverless.com
+app: myapp
+org: jlricon
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  region: eu-west-1
+  timeout: 40
+  apiKeys:
+    - value: ${env:DB_REST_API_KEY}
+  usagePlan:
+  quota:
+    limit: 1000
+    offset: 2
+    period: DAY
+  throttle:
+    burstLimit: 10
+    rateLimit: 5
+plugins:
+  - serverless-dotenv-plugin
+
+functions:
+  get_papers:
+    handler: handler.get_papers
+    events:
+      - http:
+          path: webhook
+          method: get
+          private: true
+    memorySize: 128
+    environment:
+      PGHOST: ${env:PGHOST}
+      PGPORT: ${env:PGPORT}
+      PGDATABASE: ${env:PGDATABASE}
+      PGPASSWORD: ${env:PGPASSWORD}
+      PGUSER: ${env:PGUSER}

@@ -1,0 +1,16 @@
+threads: 2
+base: "https://ricon.dev/api/get_paper"
+iterations: 5
+rampup: 2
+
+plan:
+  - name: Fetch paper with results
+    request:
+      url: /?id={{ item }}&queryKind=meta_for_id
+    with_items:
+      - 3204cf55b1621b8a6ac9d5e5aac78ee694297515
+  - name: Fetch paper with no results
+    request:
+      url: /?id={{ item }}&queryKind=meta_for_id
+    with_items:
+      - 7f630a4c112e65c92bfc0a578043d284e93549fa

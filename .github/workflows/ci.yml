@@ -1,0 +1,36 @@
+name: CI
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1.0.0
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install
+        run: yarn
+        working-directory: ./metapaper
+      - name: Build
+        run: yarn build
+        working-directory: ./metapaper
+      - name: Serve
+        run: yarn start & yarn wait-on http://localhost:3000
+        working-directory: ./metapaper
+        env:
+          DB_REST_API_KEY: ${{ secrets.DB_REST_API_KEY }}
+      - name: Percy Test
+        uses: percy/exec-action@v0.1.2
+        with:
+          command: "cypress run"
+          working-directory: ./metapaper
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
