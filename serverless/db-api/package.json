@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "pg": "^7.12.1"
+    "pg": "^8.4.0"
   },
   "devDependencies": {
     "serverless-dotenv-plugin": "^2.1.1"
